@@ -1,12 +1,18 @@
-from __future__ import print_function
+try:
+    # MicroPython
+    import ure as re
+    import ustruct as struct
+    from uio import BytesIO
+    import ubinascii as binascii
+except ImportError:
+    # CPython
+    import re
+    import struct
+    from io import BytesIO
+    import binascii
 
-import re
-import struct
-from io import BytesIO
-import binascii
 
-
-__version__ = "3.8.0"
+__version__ = "3.8.0-mpy"
 
 
 class Error(Exception):
