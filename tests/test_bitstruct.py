@@ -79,14 +79,21 @@ class BitStructTest(unittest.TestCase):
         with self.assertRaises(ValueError) as cm:
             pack('u1', "foo")
 
-        self.assertEqual(str(cm.exception),
-                         "invalid literal for int() with base 10: 'foo'")
+        if sys.implementation.name == 'micropython':
+            self.assertEqual(str(cm.exception),
+                             "invalid syntax for integer with base 10: 'foo'")
+        else:
+            self.assertEqual(str(cm.exception),
+                             "invalid literal for int() with base 10: 'foo'")
 
         # Cannot convert argument to float.
         with self.assertRaises(ValueError) as cm:
             pack('f32', "foo")
 
-        if sys.version_info[0] < 3:
+        if sys.implementation.name == 'micropython':
+            self.assertEqual(str(cm.exception),
+                             'invalid syntax for number')
+        elif sys.version_info[0] < 3:
             self.assertEqual(str(cm.exception),
                              'could not convert string to float: foo')
         else:
