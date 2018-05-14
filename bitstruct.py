@@ -172,7 +172,7 @@ class CompiledFormat(object):
 
         # Reverse the bit order in little endian values.
         if endianness == "<":
-            value_bits = value_bits[::-1]
+            value_bits = ''.join(reversed(value_bits))
 
         # Reverse bytes order for least significant byte first.
         if self._byte_order == ">":
@@ -332,7 +332,7 @@ class CompiledFormat(object):
 
                 # Reverse the bit order in little endian values.
                 if endianness == "<":
-                    value_bits = value_bits[::-1]
+                    value_bits = ''.join(reversed(value_bits))
 
                 if type_ == 's':
                     value = _unpack_signed_integer(value_bits)
@@ -502,7 +502,7 @@ def byteswap(fmt, data, offset=0):
     data_swapped = BytesIO()
 
     for f in fmt:
-        swapped = data.read(int(f))[::-1]
+        swapped = bytes(reversed(data.read(int(f))))
         data_swapped.write(swapped)
 
     return data_swapped.getvalue()
