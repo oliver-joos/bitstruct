@@ -1,5 +1,8 @@
 import unittest
-import timeit
+try:
+    import timeit
+except ImportError:
+    timeit = None
 import sys
 from bitstruct import *
 import bitstruct
@@ -355,6 +358,7 @@ class BitStructTest(unittest.TestCase):
         unpacked = unpack('u19u5u1u7<', packed)
         self.assertEqual(unpacked, (0x12345, 5, 1, 2))
 
+    @unittest.skipIf(timeit is None, 'cannot import timeit')
     def test_performance_mixed_types(self):
         """Test pack/unpack performance with mixed types.
 
@@ -396,6 +400,7 @@ class BitStructTest(unittest.TestCase):
             number=50000)
         print("unpack time compiled: {} s ({} s/unpack)".format(time, time / 50000))
 
+    @unittest.skipIf(timeit is None, 'cannot import timeit')
     def test_performance_integers(self):
         """Test pack/unpack performance with integers.
 
