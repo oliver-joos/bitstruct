@@ -7,6 +7,23 @@ import sys
 from bitstruct import *
 import bitstruct
 
+
+if sys.implementation.name == 'micropython':
+    # Quick fix for MicroPython unittest by monkey-patching context manager class
+    # Needed until this is merged: https://github.com/micropython/micropython-lib/pull/280
+
+    def __fixed_exit__(self, exc_type, exc_value, tb):
+        ok = self.__old_exit__(exc_type, exc_value, tb)
+        if ok:
+            # store exception for later retrieval
+            self.exception = exc_value
+        return ok
+
+    from unittest import AssertRaisesContext
+    AssertRaisesContext.__old_exit__ = AssertRaisesContext.__exit__
+    AssertRaisesContext.__exit__ = __fixed_exit__
+
+
 class BitStructTest(unittest.TestCase):
 
     def test_pack(self):
